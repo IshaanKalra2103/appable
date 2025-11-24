@@ -174,12 +174,13 @@ export async function generateDesignSpec(prompt: string): Promise<AppDesignSpec>
   console.log(`[LLM] Generating design for prompt: "${prompt.substring(0, 100)}..."`);
 
   try {
-    // Use Gemini 1.5 Flash for fast, cost-effective generation
+    // Use Gemini 3.0 Pro for advanced design generation
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash-latest',
+      model: 'gemini-3-pro-image-preview',
       generationConfig: {
         temperature: 0.7,
         maxOutputTokens: 8192,
+        responseMimeType: 'application/json', // Request JSON response
       },
     });
 
