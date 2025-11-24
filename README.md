@@ -5,10 +5,11 @@ A tool for generating mobile app UI designs from natural language prompts. Simil
 ## Current Features (v0.1)
 
 - ✅ Natural language prompt input
-- ✅ Structured UI specification generation (currently stubbed)
+- ✅ **AI-powered design generation using Google Gemini 1.5 Flash**
 - ✅ Phone-like preview frames rendering in browser
 - ✅ Multi-screen app support
 - ✅ Clean, extensible architecture
+- ✅ Real-time design generation based on user prompts
 
 ## Tech Stack
 
@@ -16,7 +17,7 @@ A tool for generating mobile app UI designs from natural language prompts. Simil
 - **Backend:** Next.js API Routes
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
-- **LLM:** Placeholder for Google Gemini 3.0 (currently using stub)
+- **LLM:** Google Gemini 1.5 Flash API
 
 ## Project Structure
 
@@ -27,7 +28,7 @@ appable/
 │   │   └── uiSchema.ts          # Shared type definitions
 │   ├── services/
 │   │   └── llm/
-│   │       └── geminiDesign.ts  # LLM integration point (stub)
+│   │       └── geminiDesign.ts  # Gemini API integration
 │   ├── components/
 │   │   ├── UINodeRenderer.tsx   # Renders UI nodes
 │   │   └── ScreenPreview.tsx    # Phone frame component
@@ -37,6 +38,7 @@ appable/
 │       └── api/
 │           └── design/
 │               └── route.ts     # API endpoint
+├── .env.local                   # Environment variables (API key)
 └── package.json
 ```
 
@@ -45,15 +47,27 @@ appable/
 ### Prerequisites
 
 - Node.js 18+ and npm/pnpm/yarn
+- **Google Gemini API key** (get one free at [https://aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey))
 
 ### Installation
 
+1. **Install dependencies:**
+
 ```bash
-# Install dependencies
 npm install
 # or
 pnpm install
 ```
+
+2. **Set up your Gemini API key:**
+
+Create a `.env.local` file in the root directory and add your API key:
+
+```env
+GEMINI_API_KEY=your_api_key_here
+```
+
+**Important:** Never commit your `.env.local` file to version control. It's already in `.gitignore`.
 
 ### Running Locally
 
@@ -102,40 +116,25 @@ interface AppDesignSpec {
 
 ## Future Roadmap
 
-- [ ] Integrate Google Gemini 3.0 API for real LLM-based design generation
+- [x] ~~Integrate Google Gemini API for real LLM-based design generation~~ ✅ **Done!**
 - [ ] Generate React Native code from design specs
 - [ ] Remote Android emulator integration
 - [ ] Stream running app into browser
 - [ ] Export generated code
 - [ ] Design iteration and refinement
 - [ ] Component library support
+- [ ] Support for more UI components (images, inputs, lists, etc.)
+- [ ] Custom theming and color schemes
+- [ ] Multi-step design refinement conversations
 
-## Integrating Gemini 3.0
+## How It Works
 
-To replace the stub with real LLM generation:
+1. **User Input:** You describe your app idea in natural language
+2. **AI Processing:** Gemini 1.5 Flash analyzes your prompt and generates a structured JSON design specification
+3. **Rendering:** The UI renderer walks the design tree and creates visual phone frames
+4. **Preview:** See your app's screens rendered in mobile-like containers
 
-1. Get a Gemini API key from Google AI Studio
-2. Install the Gemini SDK: `npm install @google/generative-ai`
-3. Update `src/services/llm/geminiDesign.ts`:
-
-```typescript
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-
-export async function generateDesignSpec(prompt: string): Promise<AppDesignSpec> {
-  const model = genAI.getGenerativeModel({ model: 'gemini-3.0-flash' });
-
-  const systemPrompt = `You are a mobile app design assistant. Generate a JSON design spec following this schema: ${JSON.stringify(/* schema here */)}`;
-
-  const result = await model.generateContent([systemPrompt, prompt]);
-  const json = JSON.parse(result.response.text());
-
-  return json as AppDesignSpec;
-}
-```
-
-4. Add environment variable: `GEMINI_API_KEY=your_key_here` to `.env.local`
+The system prompt teaches Gemini about the UI schema, design principles, and output format, ensuring consistent, valid designs every time.
 
 ## License
 
